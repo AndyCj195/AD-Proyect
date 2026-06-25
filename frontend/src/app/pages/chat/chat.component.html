@@ -1,0 +1,102 @@
+<div class="chat-layout">
+
+  <!-- SIDEBAR: Lista de usuarios -->
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <h2>💬 ChatApp</h2>
+      <span class="version">v1.0</span>
+    </div>
+
+    <div class="users-section">
+      <h3>
+        <span class="dot online"></span>
+        Conectados ({{ connectedUsers.length }})
+      </h3>
+      <ul class="users-list">
+        <li *ngFor="let user of connectedUsers" [class.me]="user === currentUser">
+          <span class="avatar">{{ user[0].toUpperCase() }}</span>
+          <span class="name">{{ user }}</span>
+          <span class="badge" *ngIf="user === currentUser">Tú</span>
+        </li>
+      </ul>
+    </div>
+
+    <div class="sidebar-footer">
+      <div class="current-user">
+        <span class="avatar large">{{ currentUser[0].toUpperCase() }}</span>
+        <span class="username">{{ currentUser }}</span>
+      </div>
+      <button class="btn-logout" (click)="logout()">⬅ Salir</button>
+    </div>
+  </aside>
+
+  <!-- MAIN: Panel de chat -->
+  <main class="chat-main">
+
+    <!-- Header -->
+    <div class="chat-header">
+      <div class="channel-info">
+        <span class="channel-icon">#</span>
+        <span class="channel-name">general</span>
+        <span class="channel-desc">Canal principal del chat</span>
+      </div>
+    </div>
+
+    <!-- Mensajes -->
+    <div class="messages-container">
+      <div *ngIf="messages.length === 0" class="empty-state">
+        <p>🌟 ¡Nadie ha escrito nada aún. Sé el primero!</p>
+      </div>
+
+      <div
+        *ngFor="let msg of messages"
+        class="message"
+        [class.own]="isOwnMessage(msg)"
+        [class.system]="msg.type === 'system'"
+      >
+        <!-- Mensaje del sistema -->
+        <div *ngIf="msg.type === 'system'" class="system-msg">
+          {{ msg.message }}
+        </div>
+
+        <!-- Mensaje normal -->
+        <div *ngIf="msg.type === 'message'" class="msg-body">
+          <span class="msg-avatar">{{ msg.username[0].toUpperCase() }}</span>
+          <div class="msg-content">
+            <div class="msg-meta">
+              <span class="msg-author">{{ isOwnMessage(msg) ? 'Tú' : msg.username }}</span>
+              <span class="msg-time">{{ formatTime(msg.timestamp) }}</span>
+            </div>
+            <div class="msg-text">{{ msg.message }}</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Indicador "escribiendo..." -->
+      <div *ngIf="typingUsers.length > 0" class="typing-indicator">
+        <span class="dots"><span></span><span></span><span></span></span>
+        {{ typingUsers.join(', ') }} {{ typingUsers.length === 1 ? 'está' : 'están' }} escribiendo...
+      </div>
+
+      <div #messagesEnd></div>
+    </div>
+
+    <!-- Input de mensaje -->
+    <div class="input-area">
+      <div class="input-wrapper">
+        <input
+          [(ngModel)]="newMessage"
+          (input)="onTyping()"
+          (keyup.enter)="send()"
+          type="text"
+          placeholder="Escribe un mensaje en #general..."
+          maxlength="500"
+        />
+        <button class="btn-send" (click)="send()" [disabled]="!newMessage.trim()">
+          ➤
+        </button>
+      </div>
+    </div>
+
+  </main>
+</div>

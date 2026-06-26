@@ -14,13 +14,22 @@ export interface ChatMessage {
 })
 export class SocketService {
   private socket: Socket | null = null;
-  private readonly SERVER_URL = 'http://localhost:3000';
+  private readonly SERVER_URL = 'https://ad-chat-backend.onrender.com';
 
   connect(): void {
     if (!this.socket || !this.socket.connected) {
+      const token = localStorage.getItem('token');
       this.socket = io(this.SERVER_URL, {
         transports: ['websocket'],
+        auth: {
+          token: token,
+        },
       });
+
+      this.socket.on('connect_error', (err) => {
+        console.error('[Socket] Error de conexión:', err.message);
+      });
+
       console.log('[Socket] Conectando al servidor...');
     }
   }

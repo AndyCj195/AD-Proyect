@@ -8,6 +8,7 @@ import {
   ConnectedSocket,
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
+import { JwtService } from '@nestjs/jwt';
 
 export interface ChatMessage {
   username: string;
@@ -31,8 +32,28 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
   // Historial de mensajes (últimos 50)
   private messageHistory: ChatMessage[] = [];
 
-  handleConnection(client: Socket) {
-    console.log(`[SOCKET] Cliente conectado: ${client.id}`);
+  constructor(private jwtService: JwtService) {}
+
+  async handleConnection(client: Socket) {
+    try {
+      const token = client.handshake.auth?.token || client.handshake.headers?.authorization;
+      if (!token) {
+        console.log(`[SOCKET] Conexión rechazada: Token no proporcionado para cliente ${client.id}`);
+        client.disconnect();
+        return;
+      }
+
+      const jwtToken = token.startsWith('Bearer ') ? token.replace('Bearer ', '') : token;
+      const payload = await this.jwtService.verifyAsync(jwtToken, {
+        secret: process.env.JWT_SECRET || 'ad-project-secret-2024',
+      });
+
+      client.data = { username: payload.username, userId: payload.sub };
+      console.log(`[SOCKET] Cliente conectado y autenticado: ${payload.username} (${client.id})`);
+    } catch (err) {
+      console.log(`[SOCKET] Conexión rechazada: Token inválido para cliente ${client.id}`);
+      client.disconnect();
+    }
   }
 
   handleDisconnect(client: Socket) {
@@ -53,10 +74,14 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
   @SubscribeMessage('join')
   handleJoin(
-    @MessageBody() data: { username: string },
     @ConnectedSocket() client: Socket,
   ) {
-    const { username } = data;
+    const username = client.data?.username;
+    if (!username) {
+      client.disconnect();
+      return;
+    }
+    
     this.connectedUsers.set(client.id, username);
 
     // Enviar historial de mensajes al nuevo usuario
@@ -78,11 +103,17 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
   @SubscribeMessage('sendMessage')
   handleMessage(
-    @MessageBody() data: { username: string; message: string },
-    @ConnectedSocket() _client: Socket,
+    @MessageBody() data: { message: string },
+    @ConnectedSocket() client: Socket,
   ) {
+    const username = client.data?.username;
+    if (!username) {
+      client.disconnect();
+      return;
+    }
+
     const msg: ChatMessage = {
-      username: data.username,
+      username: username,
       message: data.message,
       timestamp: new Date().toISOString(),
       type: 'message',
@@ -94,16 +125,19 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
     // Broadcast a todos los clientes
     this.server.emit('receiveMessage', msg);
-    console.log(`[MSG] ${data.username}: ${data.message}`);
+    console.log(`[MSG] ${username}: ${data.message}`);
   }
 
   @SubscribeMessage('typing')
   handleTyping(
-    @MessageBody() data: { username: string; isTyping: boolean },
+    @MessageBody() data: { isTyping: boolean },
     @ConnectedSocket() client: Socket,
   ) {
+    const username = client.data?.username;
+    if (!username) return;
+
     // Notificar a todos EXCEPTO quien está escribiendo
-    client.broadcast.emit('userTyping', data);
+    client.broadcast.emit('userTyping', { username, isTyping: data.isTyping });
   }
 
   private getUsersList(): string[] {

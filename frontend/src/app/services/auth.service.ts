@@ -12,7 +12,7 @@ interface AuthResponse {
   providedIn: 'root',
 })
 export class AuthService {
-  private readonly API = 'http://localhost:3000/auth';
+  private readonly API = 'https://ad-chat-backend.onrender.com/auth';
 
   constructor(private http: HttpClient) {}
 

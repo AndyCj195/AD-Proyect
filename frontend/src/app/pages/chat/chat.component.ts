@@ -5,6 +5,7 @@ import {
   ViewChild,
   ElementRef,
   AfterViewChecked,
+  ChangeDetectorRef,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -37,6 +38,7 @@ export class ChatComponent implements OnInit, OnDestroy, AfterViewChecked {
     private socket: SocketService,
     private auth: AuthService,
     private router: Router,
+    private cdr: ChangeDetectorRef,
   ) {}
 
   ngOnInit(): void {
@@ -51,15 +53,18 @@ export class ChatComponent implements OnInit, OnDestroy, AfterViewChecked {
       this.socket.onMessageHistory().subscribe((history) => {
         this.messages = history;
         this.shouldScroll = true;
+        this.cdr.detectChanges();
       }),
 
       this.socket.onMessage().subscribe((msg) => {
         this.messages.push(msg);
         this.shouldScroll = true;
+        this.cdr.detectChanges();
       }),
 
       this.socket.onUsersUpdate().subscribe((users) => {
         this.connectedUsers = users;
+        this.cdr.detectChanges();
       }),
 
       this.socket.onUserTyping().subscribe(({ username, isTyping }) => {
@@ -70,6 +75,7 @@ export class ChatComponent implements OnInit, OnDestroy, AfterViewChecked {
         } else {
           this.typingUsers = this.typingUsers.filter((u) => u !== username);
         }
+        this.cdr.detectChanges();
       }),
     );
   }

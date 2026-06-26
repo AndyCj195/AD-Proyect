@@ -31,6 +31,7 @@ export class ChatComponent implements OnInit, OnDestroy, AfterViewChecked {
   private typingTimeout: any;
   private subscriptions: Subscription[] = [];
   private shouldScroll = true;
+  private isCurrentlyTyping = false;
 
   constructor(
     private socket: SocketService,
@@ -91,12 +92,17 @@ export class ChatComponent implements OnInit, OnDestroy, AfterViewChecked {
     this.socket.sendMessage(this.currentUser, msg);
     this.newMessage = '';
     this.socket.sendTyping(this.currentUser, false);
+    this.isCurrentlyTyping = false;
   }
 
   onTyping(): void {
-    this.socket.sendTyping(this.currentUser, true);
+    if (!this.isCurrentlyTyping) {
+      this.isCurrentlyTyping = true;
+      this.socket.sendTyping(this.currentUser, true);
+    }
     clearTimeout(this.typingTimeout);
     this.typingTimeout = setTimeout(() => {
+      this.isCurrentlyTyping = false;
       this.socket.sendTyping(this.currentUser, false);
     }, 2000);
   }

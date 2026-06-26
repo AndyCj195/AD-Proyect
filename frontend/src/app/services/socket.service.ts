@@ -22,7 +22,7 @@ export class SocketService {
     if (!this.socket || !this.socket.connected) {
       const token = localStorage.getItem('token');
       this.socket = io(this.SERVER_URL, {
-        transports: ['websocket'],
+        transports: ['polling', 'websocket'],
         auth: {
           token: token,
         },

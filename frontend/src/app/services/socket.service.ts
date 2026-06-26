@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, NgZone } from '@angular/core';
 import { io, Socket } from 'socket.io-client';
 import { Observable } from 'rxjs';
 
@@ -15,6 +15,8 @@ export interface ChatMessage {
 export class SocketService {
   private socket: Socket | null = null;
   private readonly SERVER_URL = 'https://ad-chat-backend.onrender.com';
+
+  constructor(private ngZone: NgZone) {}
 
   connect(): void {
     if (!this.socket || !this.socket.connected) {
@@ -56,7 +58,9 @@ export class SocketService {
   onMessage(): Observable<ChatMessage> {
     return new Observable((observer) => {
       this.socket?.on('receiveMessage', (data: ChatMessage) => {
-        observer.next(data);
+        this.ngZone.run(() => {
+          observer.next(data);
+        });
       });
     });
   }
@@ -64,7 +68,9 @@ export class SocketService {
   onMessageHistory(): Observable<ChatMessage[]> {
     return new Observable((observer) => {
       this.socket?.on('messageHistory', (data: ChatMessage[]) => {
-        observer.next(data);
+        this.ngZone.run(() => {
+          observer.next(data);
+        });
       });
     });
   }
@@ -72,7 +78,9 @@ export class SocketService {
   onUsersUpdate(): Observable<string[]> {
     return new Observable((observer) => {
       this.socket?.on('updateUsers', (users: string[]) => {
-        observer.next(users);
+        this.ngZone.run(() => {
+          observer.next(users);
+        });
       });
     });
   }
@@ -80,7 +88,9 @@ export class SocketService {
   onUserTyping(): Observable<{ username: string; isTyping: boolean }> {
     return new Observable((observer) => {
       this.socket?.on('userTyping', (data) => {
-        observer.next(data);
+        this.ngZone.run(() => {
+          observer.next(data);
+        });
       });
     });
   }

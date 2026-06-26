@@ -26,6 +26,10 @@ export class SocketService {
         auth: {
           token: token,
         },
+        reconnection: true,
+        reconnectionDelay: 500,
+        reconnectionDelayMax: 1000,
+        timeout: 10000,
       });
 
       this.socket.on('connect_error', (err) => {

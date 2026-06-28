@@ -10,7 +10,7 @@ Universidad de Guayaquil · Ingeniería en Software · 2024
 | Andrés Chávez | Backend — WebSockets Gateway |
 | Juliet Ortuño | Backend — Autenticación JWT |
 | Omar Arroba Carrillo | Frontend — Interfaz Angular |
-| César | Deploy + Manuales + Testing |
+| César Villacis | Deploy + Manuales + Testing |
 
 ---
 

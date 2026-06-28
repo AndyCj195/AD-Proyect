@@ -1,0 +1,115 @@
+<div class="login-wrapper">
+  <div class="login-card">
+    <!-- Logo / Header -->
+    <div class="login-header">
+      <div class="logo-icon">💬</div>
+      <h1 class="app-title">ChatApp</h1>
+      <p class="app-subtitle">Sistema de Chat en Tiempo Real</p>
+    </div>
+
+    <!-- Tabs -->
+    <div class="tab-selector">
+      <button
+        [class.active]="!isRegisterMode"
+        (click)="isRegisterMode = false; errorMsg = ''"
+      >
+        Iniciar Sesión
+      </button>
+      <button
+        [class.active]="isRegisterMode"
+        (click)="isRegisterMode = true; errorMsg = ''"
+      >
+        Registrarse
+      </button>
+    </div>
+
+    <!-- Formulario -->
+    <div class="form-group">
+      <label>Usuario</label>
+      <div class="input-wrapper">
+        <span class="input-icon">👤</span>
+        <input
+          [(ngModel)]="username"
+          type="text"
+          placeholder="Tu nombre de usuario"
+          [disabled]="isLoading"
+          (keyup.enter)="submit()"
+        />
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>Contraseña</label>
+      <div class="input-wrapper">
+        <span class="input-icon">🔒</span>
+        <input
+          [(ngModel)]="password"
+          type="password"
+          placeholder="Tu contraseña"
+          [disabled]="isLoading"
+          (keyup.enter)="submit()"
+        />
+      </div>
+    </div>
+
+    <!-- Campos adicionales de registro -->
+    <div class="form-group" *ngIf="isRegisterMode">
+      <label>Nombre y Apellido</label>
+      <div class="input-wrapper">
+        <span class="input-icon">🧑</span>
+        <input
+          [(ngModel)]="fullName"
+          type="text"
+          placeholder="Tu nombre completo"
+          [disabled]="isLoading"
+          (keyup.enter)="submit()"
+        />
+      </div>
+    </div>
+
+    <div class="form-group" *ngIf="isRegisterMode">
+      <label>Correo electrónico</label>
+      <div class="input-wrapper">
+        <span class="input-icon">📧</span>
+        <input
+          [(ngModel)]="email"
+          type="email"
+          placeholder="correo@ejemplo.com"
+          [disabled]="isLoading"
+          (keyup.enter)="submit()"
+        />
+      </div>
+    </div>
+
+    <div class="form-group" *ngIf="isRegisterMode">
+      <label>Fecha de nacimiento</label>
+      <div class="input-wrapper">
+        <span class="input-icon">📅</span>
+        <input
+          [(ngModel)]="birthDate"
+          type="date"
+          [disabled]="isLoading"
+          (keyup.enter)="submit()"
+        />
+      </div>
+    </div>
+
+    <!-- Error -->
+    <div class="error-msg" *ngIf="errorMsg">
+      ⚠️ {{ errorMsg }}
+    </div>
+
+    <!-- Botón principal -->
+    <button class="btn-primary" (click)="submit()" [disabled]="isLoading">
+      <span *ngIf="!isLoading">
+        {{ isRegisterMode ? '✅ Crear cuenta' : '➜ Entrar al chat' }}
+      </span>
+      <span *ngIf="isLoading" class="spinner">Conectando...</span>
+    </button>
+
+    <!-- Footer -->
+    <p class="footer-note">
+      Aplicaciones Distribuidas — Universidad de Guayaquil 2026
+    </p>
+  </div>
+</div>

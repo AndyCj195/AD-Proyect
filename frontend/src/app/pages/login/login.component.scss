@@ -1,0 +1,206 @@
+@use "sass:color";
+// === Paleta de colores ===
+$bg-dark:     #0d1117;
+$bg-card:     #161b22;
+$bg-input:    #21262d;
+$border:      #30363d;
+$accent:      #58a6ff;
+$accent-glow: rgba(88, 166, 255, 0.15);
+$success:     #3fb950;
+$error:       #f85149;
+$text-primary:#e6edf3;
+$text-muted:  #8b949e;
+
+.login-wrapper {
+  min-height: 100vh;
+  background: $bg-dark;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  padding: 1rem;
+
+  // Fondo con gradiente sutil
+  background-image: radial-gradient(ellipse at 50% 0%, rgba(88,166,255,0.08) 0%, transparent 60%);
+}
+
+.login-card {
+  background: $bg-card;
+  border: 1px solid $border;
+  border-radius: 12px;
+  padding: 2.5rem 2rem;
+  width: 100%;
+  max-width: 400px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+}
+
+.login-header {
+  text-align: center;
+  margin-bottom: 2rem;
+
+  .logo-icon {
+    font-size: 2.8rem;
+    margin-bottom: 0.5rem;
+    display: block;
+  }
+
+  .app-title {
+    color: $text-primary;
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin: 0 0 0.3rem;
+    letter-spacing: -0.5px;
+  }
+
+  .app-subtitle {
+    color: $text-muted;
+    font-size: 0.85rem;
+    margin: 0;
+  }
+}
+
+.tab-selector {
+  display: flex;
+  background: $bg-input;
+  border-radius: 8px;
+  padding: 4px;
+  margin-bottom: 1.8rem;
+  gap: 4px;
+
+  button {
+    flex: 1;
+    padding: 0.6rem;
+    border: none;
+    border-radius: 6px;
+    background: transparent;
+    color: #c9d1d9;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+
+    &.active {
+      background: $accent;
+      color: #fff;
+      font-weight: 600;
+    }
+
+    &:hover:not(.active) {
+      color: $text-primary;
+      background: $border;
+    }
+  }
+}
+
+.form-group {
+  margin-bottom: 1.2rem;
+
+  label {
+    display: block;
+    color: $text-muted;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 0.5rem;
+  }
+}
+
+.input-wrapper {
+  display: flex;
+  align-items: center;
+  background: $bg-input;
+  border: 1px solid $border;
+  border-radius: 8px;
+  padding: 0 0.8rem;
+  transition: border-color 0.2s, box-shadow 0.2s;
+
+  &:focus-within {
+    border-color: $accent;
+    box-shadow: 0 0 0 3px $accent-glow, 0 0 16px rgba(88, 166, 255, 0.12);
+  }
+
+  .input-icon {
+    font-size: 1rem;
+    margin-right: 0.6rem;
+    opacity: 0.7;
+  }
+
+  input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: $text-primary;
+    font-size: 0.95rem;
+    padding: 0.75rem 0;
+    width: 100%;
+
+    &::placeholder {
+      color: $text-muted;
+    }
+
+    &:disabled {
+      opacity: 0.5;
+    }
+
+    &[type='date'] {
+      color-scheme: dark;
+    }
+  }
+}
+
+.error-msg {
+  background: rgba(248, 81, 73, 0.1);
+  border: 1px solid rgba(248, 81, 73, 0.3);
+  color: $error;
+  border-radius: 8px;
+  padding: 0.7rem 1rem;
+  font-size: 0.85rem;
+  margin-bottom: 1rem;
+}
+
+.btn-primary {
+  width: 100%;
+  padding: 0.85rem;
+  background: $accent;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-top: 0.5rem;
+
+  &:hover:not(:disabled) {
+    background: color.scale($accent, $lightness: 8%);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 16px rgba(88,166,255,0.3);
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  .spinner {
+    display: inline-block;
+    animation: pulse 1s infinite;
+  }
+}
+
+.footer-note {
+  text-align: center;
+  color: $text-muted;
+  font-size: 0.75rem;
+  margin-top: 1.5rem;
+  margin-bottom: 0;
+  opacity: 0.7;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}

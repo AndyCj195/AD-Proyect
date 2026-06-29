@@ -32,6 +32,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
   // Historial de mensajes (últimos 50)
   private messageHistory: ChatMessage[] = [];
 
+  
   constructor(private jwtService: JwtService) {}
 
   async handleConnection(client: Socket) {

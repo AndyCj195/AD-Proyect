@@ -20,3 +20,4 @@ export class User {
   @Column({ nullable: true })
   birthDate: string;
 }
+

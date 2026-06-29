@@ -12,7 +12,11 @@ interface AuthResponse {
   providedIn: 'root',
 })
 export class AuthService {
-  private readonly API = 'https://ad-chat-backend.onrender.com/auth';
+  private readonly API =
+    window.location.hostname === 'localhost' ||
+    window.location.hostname === '127.0.0.1'
+      ? 'http://localhost:3000/auth'
+      : 'https://ad-chat-backend.onrender.com/auth';
 
   constructor(private http: HttpClient) {}
 

@@ -36,22 +36,31 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
   async handleConnection(client: Socket) {
     try {
-      const token = client.handshake.auth?.token || client.handshake.headers?.authorization;
+      const token =
+        client.handshake.auth?.token || client.handshake.headers?.authorization;
       if (!token) {
-        console.log(`[SOCKET] Conexión rechazada: Token no proporcionado para cliente ${client.id}`);
+        console.log(
+          `[SOCKET] Conexión rechazada: Token no proporcionado para cliente ${client.id}`,
+        );
         client.disconnect();
         return;
       }
 
-      const jwtToken = token.startsWith('Bearer ') ? token.replace('Bearer ', '') : token;
+      const jwtToken = token.startsWith('Bearer ')
+        ? token.replace('Bearer ', '')
+        : token;
       const payload = await this.jwtService.verifyAsync(jwtToken, {
         secret: process.env.JWT_SECRET || 'ad-project-secret-2024',
       });
 
       client.data = { username: payload.username, userId: payload.sub };
-      console.log(`[SOCKET] Cliente conectado y autenticado: ${payload.username} (${client.id})`);
+      console.log(
+        `[SOCKET] Cliente conectado y autenticado: ${payload.username} (${client.id})`,
+      );
     } catch (err) {
-      console.log(`[SOCKET] Conexión rechazada: Token inválido para cliente ${client.id}`);
+      console.log(
+        `[SOCKET] Conexión rechazada: Token inválido para cliente ${client.id}`,
+      );
       client.disconnect();
     }
   }
@@ -73,15 +82,13 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
   }
 
   @SubscribeMessage('join')
-  handleJoin(
-    @ConnectedSocket() client: Socket,
-  ) {
+  handleJoin(@ConnectedSocket() client: Socket) {
     const username = client.data?.username;
     if (!username) {
       client.disconnect();
       return;
     }
-    
+
     this.connectedUsers.set(client.id, username);
 
     // Enviar historial de mensajes al nuevo usuario

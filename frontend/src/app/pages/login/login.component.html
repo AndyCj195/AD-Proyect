@@ -52,6 +52,49 @@
       </div>
     </div>
 
+    <!-- Campos adicionales de registro -->
+    <div class="form-group" *ngIf="isRegisterMode">
+      <label>Nombre y Apellido</label>
+      <div class="input-wrapper">
+        <span class="input-icon">🧑</span>
+        <input
+          [(ngModel)]="fullName"
+          type="text"
+          placeholder="Tu nombre completo"
+          [disabled]="isLoading"
+          (keyup.enter)="submit()"
+        />
+      </div>
+    </div>
+
+    
+    <div class="form-group" *ngIf="isRegisterMode">
+      <label>Correo electrónico</label>
+      <div class="input-wrapper">
+        <span class="input-icon">📧</span>
+        <input
+          [(ngModel)]="email"
+          type="email"
+          placeholder="correo@ejemplo.com"
+          [disabled]="isLoading"
+          (keyup.enter)="submit()"
+        />
+      </div>
+    </div>
+
+    <div class="form-group" *ngIf="isRegisterMode">
+      <label>Fecha de nacimiento</label>
+      <div class="input-wrapper">
+        <span class="input-icon">📅</span>
+        <input
+          [(ngModel)]="birthDate"
+          type="date"
+          [disabled]="isLoading"
+          (keyup.enter)="submit()"
+        />
+      </div>
+    </div>
+
     <!-- Error -->
     <div class="error-msg" *ngIf="errorMsg">
       ⚠️ {{ errorMsg }}
@@ -60,14 +103,14 @@
     <!-- Botón principal -->
     <button class="btn-primary" (click)="submit()" [disabled]="isLoading">
       <span *ngIf="!isLoading">
-        {{ isRegisterMode ? '✅ Crear cuenta' : '🚀 Entrar al chat' }}
+        {{ isRegisterMode ? '✅ Crear cuenta' : '➜ Entrar al chat' }}
       </span>
       <span *ngIf="isLoading" class="spinner">Conectando...</span>
     </button>
 
     <!-- Footer -->
     <p class="footer-note">
-      Aplicaciones Distribuidas — Universidad de Guayaquil 2024
+      Aplicaciones Distribuidas — Universidad de Guayaquil 2026
     </p>
   </div>
 </div>

@@ -10,9 +10,16 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  async register(username: string, password: string) {
-    const user = await this.usersService.create(username, password);
-    const token = this.jwtService.sign({ sub: user.id, username: user.username });
+  async register(
+    username: string,
+    password: string,
+    extra?: { fullName?: string; email?: string; birthDate?: string },
+  ) {
+    const user = await this.usersService.create(username, password, extra);
+    const token = this.jwtService.sign({
+      sub: user.id,
+      username: user.username,
+    });
     return { user, access_token: token };
   }
 
@@ -21,7 +28,10 @@ export class AuthService {
     if (!user) throw new UnauthorizedException('Usuario no encontrado');
     const valid = await bcrypt.compare(password, user.password);
     if (!valid) throw new UnauthorizedException('Contraseña incorrecta');
-    const token = this.jwtService.sign({ sub: user.id, username: user.username });
+    const token = this.jwtService.sign({
+      sub: user.id,
+      username: user.username,
+    });
     return { access_token: token, username: user.username };
   }
 }

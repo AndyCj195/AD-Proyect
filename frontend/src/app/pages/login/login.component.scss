@@ -34,6 +34,7 @@ $text-muted:  #8b949e;
   box-shadow: 0 8px 32px rgba(0,0,0,0.4);
 }
 
+
 .login-header {
   text-align: center;
   margin-bottom: 2rem;
@@ -73,8 +74,9 @@ $text-muted:  #8b949e;
     border: none;
     border-radius: 6px;
     background: transparent;
-    color: $text-muted;
+    color: #c9d1d9;
     font-size: 0.9rem;
+    font-weight: 500;
     cursor: pointer;
     transition: all 0.2s;
 
@@ -116,7 +118,7 @@ $text-muted:  #8b949e;
 
   &:focus-within {
     border-color: $accent;
-    box-shadow: 0 0 0 3px $accent-glow;
+    box-shadow: 0 0 0 3px $accent-glow, 0 0 16px rgba(88, 166, 255, 0.12);
   }
 
   .input-icon {
@@ -141,6 +143,10 @@ $text-muted:  #8b949e;
 
     &:disabled {
       opacity: 0.5;
+    }
+
+    &[type='date'] {
+      color-scheme: dark;
     }
   }
 }

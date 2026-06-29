@@ -4,7 +4,6 @@
   <aside class="sidebar">
     <div class="sidebar-header">
       <h2>💬 ChatApp</h2>
-      <span class="version">v1.0</span>
     </div>
 
     <div class="users-section">
@@ -14,7 +13,7 @@
       </h3>
       <ul class="users-list">
         <li *ngFor="let user of connectedUsers" [class.me]="user === currentUser">
-          <span class="avatar">{{ user[0].toUpperCase() }}</span>
+          <span class="avatar" [style.background]="getAvatarColor(user)">{{ user[0].toUpperCase() }}</span>
           <span class="name">{{ user }}</span>
           <span class="badge" *ngIf="user === currentUser">Tú</span>
         </li>
@@ -23,12 +22,13 @@
 
     <div class="sidebar-footer">
       <div class="current-user">
-        <span class="avatar large">{{ currentUser[0].toUpperCase() }}</span>
+        <span class="avatar large" [style.background]="getAvatarColor(currentUser)">{{ currentUser[0].toUpperCase() }}</span>
         <span class="username">{{ currentUser }}</span>
       </div>
       <button class="btn-logout" (click)="logout()">⬅ Salir</button>
     </div>
   </aside>
+
 
   <!-- MAIN: Panel de chat -->
   <main class="chat-main">
@@ -36,9 +36,7 @@
     <!-- Header -->
     <div class="chat-header">
       <div class="channel-info">
-        <span class="channel-icon">#</span>
-        <span class="channel-name">general</span>
-        <span class="channel-desc">Canal principal del chat</span>
+        <span class="channel-name">Canal principal del chat</span>
       </div>
     </div>
 
@@ -61,7 +59,7 @@
 
         <!-- Mensaje normal -->
         <div *ngIf="msg.type === 'message'" class="msg-body">
-          <span class="msg-avatar">{{ msg.username[0].toUpperCase() }}</span>
+          <span class="msg-avatar" [style.background]="getAvatarColor(msg.username)">{{ msg.username[0].toUpperCase() }}</span>
           <div class="msg-content">
             <div class="msg-meta">
               <span class="msg-author">{{ isOwnMessage(msg) ? 'Tú' : msg.username }}</span>
@@ -89,7 +87,7 @@
           (input)="onTyping()"
           (keyup.enter)="send()"
           type="text"
-          placeholder="Escribe un mensaje en #general..."
+          placeholder="Escribe un mensaje..."
           maxlength="500"
         />
         <button class="btn-send" (click)="send()" [disabled]="!newMessage.trim()">

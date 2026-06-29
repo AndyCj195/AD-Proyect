@@ -12,13 +12,25 @@ interface AuthResponse {
   providedIn: 'root',
 })
 export class AuthService {
-  private readonly API = 'https://ad-chat-backend.onrender.com/auth';
+  private readonly API =
+    window.location.hostname === 'localhost' ||
+    window.location.hostname === '127.0.0.1'
+      ? 'http://localhost:3000/auth'
+      : 'https://ad-chat-backend.onrender.com/auth';
 
   constructor(private http: HttpClient) {}
 
-  register(username: string, password: string): Observable<AuthResponse> {
+  register(
+    username: string,
+    password: string,
+    extra?: { fullName?: string; email?: string; birthDate?: string },
+  ): Observable<AuthResponse> {
     return this.http
-      .post<AuthResponse>(`${this.API}/register`, { username, password })
+      .post<AuthResponse>(`${this.API}/register`, {
+        username,
+        password,
+        ...extra,
+      })
       .pipe(
         tap((res) => {
           localStorage.setItem('token', res.access_token);
@@ -55,3 +67,4 @@ export class AuthService {
     return !!this.getToken();
   }
 }
+

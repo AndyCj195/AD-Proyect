@@ -14,6 +14,9 @@ import { AuthService } from '../../services/auth.service';
 export class LoginComponent {
   username = '';
   password = '';
+  fullName = '';
+  email = '';
+  birthDate = '';
   errorMsg = '';
   isLoading = false;
   isRegisterMode = false;
@@ -23,6 +26,9 @@ export class LoginComponent {
   toggleMode() {
     this.isRegisterMode = !this.isRegisterMode;
     this.errorMsg = '';
+    this.fullName = '';
+    this.email = '';
+    this.birthDate = '';
   }
 
   submit() {
@@ -34,7 +40,11 @@ export class LoginComponent {
     this.errorMsg = '';
 
     const action = this.isRegisterMode
-      ? this.auth.register(this.username, this.password)
+      ? this.auth.register(this.username, this.password, {
+          fullName: this.fullName,
+          email: this.email,
+          birthDate: this.birthDate,
+        })
       : this.auth.login(this.username, this.password);
 
     action.subscribe({
@@ -50,3 +60,4 @@ export class LoginComponent {
     });
   }
 }
+

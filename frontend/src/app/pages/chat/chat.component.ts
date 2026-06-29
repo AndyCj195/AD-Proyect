@@ -130,9 +130,22 @@ export class ChatComponent implements OnInit, OnDestroy, AfterViewChecked {
     });
   }
 
+  getAvatarColor(username: string): string {
+    const colors = [
+      '#EF4444', '#F59E0B', '#10B981', '#3B82F6', '#8B5CF6',
+      '#EC4899', '#06B6D4', '#F97316', '#14B8A6', '#6366F1',
+    ];
+    let hash = 0;
+    for (let i = 0; i < username.length; i++) {
+      hash = username.charCodeAt(i) + ((hash << 5) - hash);
+    }
+    return colors[Math.abs(hash) % colors.length];
+  }
+
   private scrollToBottom(): void {
     try {
       this.messagesEnd?.nativeElement?.scrollIntoView({ behavior: 'smooth' });
     } catch {}
   }
 }
+

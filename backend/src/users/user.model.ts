@@ -6,4 +6,3 @@ export interface User {
   email?: string;
   birthDate?: string;
 }
-

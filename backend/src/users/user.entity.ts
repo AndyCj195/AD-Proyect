@@ -12,12 +12,11 @@ export class User {
   password: string;
 
   @Column({ nullable: true })
-  fullName: string;
+  fullName?: string;
 
   @Column({ nullable: true })
-  email: string;
+  email?: string;
 
   @Column({ nullable: true })
-  birthDate: string;
+  birthDate?: string;
 }
-

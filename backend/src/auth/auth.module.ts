@@ -17,4 +17,3 @@ import { UsersModule } from '../users/users.module';
   exports: [JwtModule],
 })
 export class AuthModule {}
-

@@ -4,7 +4,6 @@ import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { User } from './user.entity';
 
-
 @Injectable()
 export class UsersService implements OnModuleInit {
   constructor(
@@ -22,7 +21,9 @@ export class UsersService implements OnModuleInit {
         password: hash,
       });
       await this.usersRepository.save(user);
-      console.log(`[SEEDER] Usuario de prueba creado: Usuario: '${testUsername}' | Contraseña: 'prueba123'`);
+      console.log(
+        `[SEEDER] Usuario de prueba creado: Usuario: '${testUsername}' | Contraseña: 'prueba123'`,
+      );
     } else {
       console.log(`[SEEDER] El usuario de prueba '${testUsername}' ya existe.`);
     }
@@ -52,5 +53,3 @@ export class UsersService implements OnModuleInit {
     return this.usersRepository.findOneBy({ username });
   }
 }
-
-

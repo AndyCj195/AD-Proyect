@@ -7,4 +7,3 @@ import { AuthModule } from '../auth/auth.module';
   providers: [ChatGateway],
 })
 export class ChatModule {}
-

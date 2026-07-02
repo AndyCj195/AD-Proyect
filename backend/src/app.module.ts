@@ -6,11 +6,28 @@ import { ChatModule } from './chat/chat.module';
 
 @Module({
   imports: [
-    TypeOrmModule.forRoot({
-      type: 'better-sqlite3',
-      database: 'database.sqlite',
-      autoLoadEntities: true,
-      synchronize: true,
+    TypeOrmModule.forRootAsync({
+      useFactory: () => {
+        const dbUrl = process.env.DATABASE_URL;
+        if (dbUrl) {
+          return {
+            type: 'postgres',
+            url: dbUrl,
+            autoLoadEntities: true,
+            synchronize: true,
+            ssl: {
+              rejectUnauthorized: false,
+            },
+          };
+        } else {
+          return {
+            type: 'better-sqlite3',
+            database: 'database.sqlite',
+            autoLoadEntities: true,
+            synchronize: true,
+          };
+        }
+      },
     }),
     AuthModule,
     UsersModule,

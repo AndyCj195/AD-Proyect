@@ -34,12 +34,13 @@ export class UsersService implements OnModuleInit {
     password: string,
     extra?: { fullName?: string; email?: string; birthDate?: string },
   ): Promise<Omit<User, 'password'>> {
-    const exists = await this.findOne(username);
+    const normalizedUsername = username.trim().toLowerCase();
+    const exists = await this.findOne(normalizedUsername);
     if (exists) throw new ConflictException('El usuario ya existe');
 
     const hash = await bcrypt.hash(password, 10);
     const user = this.usersRepository.create({
-      username,
+      username: normalizedUsername,
       password: hash,
       fullName: extra?.fullName,
       email: extra?.email,
@@ -50,6 +51,7 @@ export class UsersService implements OnModuleInit {
   }
 
   async findOne(username: string): Promise<User | null> {
-    return this.usersRepository.findOneBy({ username });
+    const normalizedUsername = username.trim().toLowerCase();
+    return this.usersRepository.findOneBy({ username: normalizedUsername });
   }
 }

@@ -21,7 +21,30 @@ export class LoginComponent {
   isLoading = false;
   isRegisterMode = false;
 
+  // Toast
+  toast: { visible: boolean; type: 'success' | 'error' | 'loading'; message: string } = {
+    visible: false,
+    type: 'loading',
+    message: '',
+  };
+  private toastTimer: any;
+
   constructor(private auth: AuthService, private router: Router) {}
+
+  showToast(type: 'success' | 'error' | 'loading', message: string, duration = 0) {
+    clearTimeout(this.toastTimer);
+    this.toast = { visible: true, type, message };
+    if (duration > 0) {
+      this.toastTimer = setTimeout(() => {
+        this.toast.visible = false;
+      }, duration);
+    }
+  }
+
+  hideToast() {
+    clearTimeout(this.toastTimer);
+    this.toast.visible = false;
+  }
 
   toggleMode() {
     this.isRegisterMode = !this.isRegisterMode;
@@ -33,11 +56,12 @@ export class LoginComponent {
 
   submit() {
     if (!this.username.trim() || !this.password.trim()) {
-      this.errorMsg = 'Completa todos los campos';
+      this.showToast('error', 'Por favor completa todos los campos', 3500);
       return;
     }
     this.isLoading = true;
     this.errorMsg = '';
+    this.showToast('loading', this.isRegisterMode ? 'Creando tu cuenta...' : 'Iniciando sesión...');
 
     const action = this.isRegisterMode
       ? this.auth.register(this.username, this.password, {
@@ -50,12 +74,16 @@ export class LoginComponent {
     action.subscribe({
       next: () => {
         this.isLoading = false;
-        this.router.navigate(['/chat']);
+        this.showToast('success', this.isRegisterMode ? '¡Cuenta creada! Entrando al chat...' : '¡Bienvenido de vuelta!');
+        setTimeout(() => {
+          this.router.navigate(['/chat']);
+        }, 1000);
       },
       error: (err) => {
         this.isLoading = false;
-        this.errorMsg =
-          err?.error?.message || 'Error al conectar con el servidor';
+        const msg = err?.error?.message || 'No se pudo conectar con el servidor';
+        this.showToast('error', msg, 4000);
+        this.errorMsg = msg;
       },
     });
   }

@@ -1,4 +1,16 @@
 <div class="login-wrapper">
+
+  <!-- TOAST NOTIFICATION -->
+  <div class="toast-container" [class.visible]="toast.visible" [class]="'toast-' + toast.type">
+    <span class="toast-icon">
+      <span *ngIf="toast.type === 'success'">✅</span>
+      <span *ngIf="toast.type === 'error'">❌</span>
+      <span *ngIf="toast.type === 'loading'" class="toast-spinner"></span>
+    </span>
+    <span class="toast-msg">{{ toast.message }}</span>
+    <button class="toast-close" (click)="hideToast()" *ngIf="toast.type !== 'loading'">✕</button>
+  </div>
+
   <div class="login-card">
     <!-- Logo / Header -->
     <div class="login-header">
